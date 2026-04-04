@@ -63,7 +63,8 @@ async function backfillTips(fromBlock: bigint) {
   }
 
   if (logs.length > 0) {
-    const lastBlock = logs[logs.length - 1].blockNumber ?? 0n;
+    const lastLog = logs[logs.length - 1]!;
+    const lastBlock = lastLog.blockNumber ?? 0n;
     await saveLastBlock("tip", lastBlock);
     console.log(`[indexer] Backfilled ${logs.length} tips up to block ${lastBlock}`);
   }
@@ -162,7 +163,8 @@ async function backfillPasses(fromBlock: bigint) {
   }
 
   if (logs.length > 0) {
-    const lastBlock = logs[logs.length - 1].blockNumber!;
+    const lastLog = logs[logs.length - 1]!;
+    const lastBlock = lastLog.blockNumber ?? 0n;
     await saveLastBlock("gate", lastBlock);
     console.log(`[indexer] Backfilled ${logs.length} pass mints`);
   }
