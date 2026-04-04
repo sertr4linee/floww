@@ -1,5 +1,5 @@
 import { createMiddleware } from "hono/factory";
-import { verifyMessage } from "viem";
+import { recoverMessageAddress } from "viem";
 import { HTTPException } from "hono/http-exception";
 
 type AuthEnv = {
@@ -22,15 +22,6 @@ export const authMiddleware = createMiddleware<AuthEnv>(async (c, next) => {
   }
 
   try {
-    // Verify the signature and recover the wallet address
-    const valid = await verifyMessage({
-      address: signature as `0x${string}`, // will be overwritten
-      message,
-      signature: signature as `0x${string}`,
-    });
-
-    // Actually we need to recover the address from the signature
-    const { recoverMessageAddress } = await import("viem");
     const address = await recoverMessageAddress({
       message,
       signature: signature as `0x${string}`,
