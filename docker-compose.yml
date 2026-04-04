@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: floww
+      POSTGRES_PASSWORD: floww
+      POSTGRES_DB: floww
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U floww"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgresql://floww:floww@db:5432/floww
+      RPC_URL: https://api.testnet.abs.xyz
+      PORT: 3001
+      TIP_CONTRACT: "0x92E1B4017e9914E90bdd2bcf13aD3219C43D61FC"
+      SUBSCRIPTION_CONTRACT: "0xC4b0001Dc0964B4F21A112DDd38bffC2D0Cc1Ca9"
+      GATE_CONTRACT: "0x4d3Ed14f91CCC2f95510f257C981dfc753dC2970"
+      USDC_ADDRESS: "0x549085E59F8E1BD621e6b009f3499e261735CD29"
+      PINATA_JWT: ""
+      RESEND_API_KEY: ""
+      KEEPER_PRIVATE_KEY: ""
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend/src:/app/src  # hot reload en dev
+
+volumes:
+  postgres_data:
