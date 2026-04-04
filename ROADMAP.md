@@ -91,9 +91,9 @@
 
 - [x] Écrire `script/Deploy.s.sol` (deploy les 3 contrats + set treasury)
 - [x] Deploy sur Abstract testnet
-- [ ] Vérifier les contrats sur Abscan (testnet)
+- [x] Vérifier les contrats sur Abscan (testnet)
 - [x] Sauvegarder les adresses déployées dans `contracts/deployments/testnet.json`
-- [ ] Tester manuellement via `cast` : tip ETH, tip USDC, create plan, subscribe, mint pass
+- [x] Tester manuellement via `cast` : tip ETH, tip USDC, create plan, subscribe, mint pass
 - [x] Exporter les ABIs (`forge inspect FlowwTip abi > abis/FlowwTip.json`)
 
 ---
@@ -102,81 +102,80 @@
 
 ### 2.1 Setup projet
 
-- [ ] `mkdir backend && cd backend && bun init`
-- [ ] Installer les deps :
+- [x] `mkdir backend && cd backend && bun init`
+- [x] Installer les deps :
   ```
   bun add hono drizzle-orm postgres viem dotenv
   bun add -d drizzle-kit typescript @types/node
   ```
-- [ ] Configurer `tsconfig.json` (strict, paths)
-- [ ] Créer `src/index.ts` — entry point Hono
-- [ ] Configurer le `.env` (DATABASE_URL, RPC_URL, contract addresses)
+- [x] Configurer `tsconfig.json` (strict, paths)
+- [x] Créer `src/index.ts` — entry point Hono
+- [x] Configurer le `.env` (DATABASE_URL, RPC_URL, contract addresses)
 - [ ] Vérifier que `bun run src/index.ts` démarre le serveur
 
 ### 2.2 Base de données — Schema Drizzle
 
-- [ ] Créer `src/db/schema.ts` :
-  - [ ] Table `creators` (id/wallet, username, displayName, bio, avatarIpfsHash, createdAt)
-  - [ ] Table `posts` (id, creatorId, title, contentIpfsHash, isExclusive, requiredPlanId, requiredPassId, publishedAt)
-  - [ ] Table `tips` (id/txHash, fromAddress, creatorAddress, token, amount, fee, message, blockTimestamp)
-  - [ ] Table `subscriptions` (id, subscriberAddress, creatorAddress, planId, nextBillingDate, active)
-  - [ ] Table `passes_minted` (id/txHash, passId, buyerAddress, blockTimestamp)
-- [ ] Créer `src/db/index.ts` — connection pool
-- [ ] Configurer `drizzle.config.ts`
+- [x] Créer `src/db/schema.ts` :
+  - [x] Table `creators` (id/wallet, username, displayName, bio, avatarIpfsHash, createdAt)
+  - [x] Table `posts` (id, creatorId, title, contentIpfsHash, isExclusive, requiredPlanId, requiredPassId, publishedAt)
+  - [x] Table `tips` (id/txHash, fromAddress, creatorAddress, token, amount, fee, message, blockTimestamp)
+  - [x] Table `subscriptions` (id, subscriberAddress, creatorAddress, planId, nextBillingDate, active)
+  - [x] Table `passes_minted` (id/txHash, passId, buyerAddress, blockTimestamp)
+- [x] Créer `src/db/index.ts` — connection pool
+- [x] Configurer `drizzle.config.ts`
 - [ ] Provisionner une DB PostgreSQL (Neon gratuit ou Supabase ou local Docker)
 - [ ] `bunx drizzle-kit push` — appliquer le schema
 - [ ] Vérifier les tables créées
 
 ### 2.3 Auth — Vérification signature wallet
 
-- [ ] Créer `src/middleware/auth.ts`
-  - [ ] Le frontend envoie un header `Authorization: Signature <sig>` + `X-Message: <message>`
-  - [ ] Le backend vérifie avec `viem.verifyMessage()` → extrait l'adresse wallet
-  - [ ] Injecte `c.set("walletAddress", address)` dans le contexte Hono
+- [x] Créer `src/middleware/auth.ts`
+  - [x] Le frontend envoie un header `Authorization: Signature <sig>` + `X-Message: <message>`
+  - [x] Le backend vérifie avec `viem.recoverMessageAddress()` → extrait l'adresse wallet
+  - [x] Injecte `c.set("walletAddress", address)` dans le contexte Hono
 - [ ] Tester avec un script : signer un message, appeler l'API, vérifier
 
 ### 2.4 API REST — Routes
 
-- [ ] `GET /api/creators/:username` — profil créateur (public)
-- [ ] `POST /api/creators/me` — créer/update profil (auth required)
-- [ ] `GET /api/creators/:username/posts` — liste des posts
-  - [ ] Posts publics : retournés à tout le monde
-  - [ ] Posts exclusifs : retourner `{ locked: true }` si pas d'accès
-- [ ] `GET /api/posts/:id` — détail post (vérifie accès onchain)
-- [ ] `POST /api/posts` — créer un post (auth required)
-  - [ ] Champ `isExclusive`, `requiredPlanId` ou `requiredPassId`
-- [ ] `GET /api/dashboard/stats` — revenus totaux, nb tips, nb abonnés (auth required)
-- [ ] `GET /api/dashboard/tips` — liste tips reçus, paginée (auth required)
-- [ ] `GET /api/dashboard/subscribers` — liste abonnés actifs (auth required)
+- [x] `GET /api/creators/:username` — profil créateur (public)
+- [x] `POST /api/creators/me` — créer/update profil (auth required)
+- [x] `GET /api/creators/:username/posts` — liste des posts
+  - [x] Posts publics : retournés à tout le monde
+  - [x] Posts exclusifs : retourner `{ locked: true }` si pas d'accès
+- [x] `GET /api/posts/:id` — détail post (vérifie accès onchain)
+- [x] `POST /api/posts` — créer un post (auth required)
+  - [x] Champ `isExclusive`, `requiredPlanId` ou `requiredPassId`
+- [x] `GET /api/dashboard/stats` — revenus totaux, nb tips, nb abonnés (auth required)
+- [x] `GET /api/dashboard/tips` — liste tips reçus, paginée (auth required)
+- [x] `GET /api/dashboard/subscribers` — liste abonnés actifs (auth required)
 
 ### 2.5 Vérification accès onchain
 
-- [ ] Créer `src/services/gate.ts`
-  - [ ] `checkAccess(userAddress, creatorAddress, passId?, planId?)` → bool
-  - [ ] Appel `readContract` sur FlowwGate.hasAccess() ou FlowwSubscription.isActive()
-- [ ] Créer `src/lib/viem.ts` — client public Abstract
-- [ ] Cache Redis (ou in-memory) : cacher le résultat 60s pour éviter les appels RPC répétés
+- [x] Créer `src/services/gate.ts`
+  - [x] `checkAccess(userAddress, creatorAddress, passId?, planId?)` → bool
+  - [x] Appel `readContract` sur FlowwGate.hasAccess() ou FlowwSubscription.isActive()
+- [x] Créer `src/lib/viem.ts` — client public Abstract
+- [x] Cache in-memory : cacher le résultat 60s pour éviter les appels RPC répétés
 
 ### 2.6 Upload IPFS
 
-- [ ] `bun add pinata`
-- [ ] Créer `src/services/ipfs.ts`
-  - [ ] `uploadContent(file)` → retourne le CID
-  - [ ] `uploadJSON(metadata)` → retourne le CID (pour les metadata NFT)
-- [ ] Route `POST /api/upload` — upload fichier, retourne le hash IPFS (auth required)
+- [x] Créer `src/services/ipfs.ts`
+  - [x] `uploadFile(file)` → retourne le CID
+  - [x] `uploadJSON(metadata)` → retourne le CID (pour les metadata NFT)
+- [x] Route `POST /api/upload` — upload fichier, retourne le hash IPFS (auth required)
 
 ### 2.7 Indexer onchain
 
-- [ ] Créer `src/services/indexer.ts`
-  - [ ] `startIndexer()` — lancé au démarrage du serveur
-  - [ ] Watch event `Tipped` sur FlowwTip → insert dans table `tips`
-  - [ ] Watch event `Subscribed` sur FlowwSubscription → insert dans table `subscriptions`
-  - [ ] Watch event `Renewed` → update `nextBillingDate`
-  - [ ] Watch event `Cancelled` → set `active = false`
-  - [ ] Watch event `PassMinted` sur FlowwGate → insert dans table `passes_minted`
-- [ ] Mécanisme de backfill au démarrage :
-  - [ ] Stocker le dernier block indexé dans la DB (table `indexer_state`)
-  - [ ] Au redémarrage, récupérer les events depuis le dernier block indexé
+- [x] Créer `src/services/indexer.ts`
+  - [x] `startIndexer()` — lancé au démarrage du serveur
+  - [x] Watch event `Tipped` sur FlowwTip → insert dans table `tips`
+  - [x] Watch event `Subscribed` sur FlowwSubscription → insert dans table `subscriptions`
+  - [x] Watch event `Renewed` → update `nextBillingDate`
+  - [x] Watch event `Cancelled` → set `active = false`
+  - [x] Watch event `PassMinted` sur FlowwGate → insert dans table `passes_minted`
+- [x] Mécanisme de backfill au démarrage :
+  - [x] Stocker le dernier block indexé dans la DB (table `indexer_state`)
+  - [x] Au redémarrage, récupérer les events depuis le dernier block indexé
 - [ ] Gestion d'erreur et reconnexion automatique
 
 ### 2.8 Tests & deploy
