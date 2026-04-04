@@ -9,8 +9,8 @@
 
 ### Monorepo & outils
 
-- [ ] Créer le repo Git `floww`
-- [ ] Initialiser la structure monorepo :
+- [x] Créer le repo Git `floww`
+- [x] Initialiser la structure monorepo :
   ```
   floww/
   ├── contracts/       # Foundry
@@ -18,8 +18,8 @@
   ├── frontend/        # Next.js
   └── docs/
   ```
-- [ ] Configurer `.gitignore` (node_modules, .env, out/, cache/, broadcast/)
-- [ ] Créer les `.env.example` pour chaque package
+- [x] Configurer `.gitignore` (node_modules, .env, out/, cache/, broadcast/)
+- [x] Créer les `.env.example` pour chaque package
 - [ ] Créer un wallet de dev (clé privée testnet uniquement)
 - [ ] Récupérer des ETH testnet Abstract via le faucet
 
@@ -29,67 +29,67 @@
 
 ### 1.1 Setup Foundry
 
-- [ ] `forge init contracts`
-- [ ] `forge install OpenZeppelin/openzeppelin-contracts`
-- [ ] Configurer `foundry.toml` (remappings, optimizer, solc 0.8.24)
-- [ ] Configurer le RPC Abstract testnet dans `foundry.toml`
-- [ ] Vérifier que `forge build` compile
+- [x] `forge init contracts`
+- [x] `forge install OpenZeppelin/openzeppelin-contracts`
+- [x] Configurer `foundry.toml` (remappings, optimizer, solc 0.8.24)
+- [x] Configurer le RPC Abstract testnet dans `foundry.toml`
+- [x] Vérifier que `forge build` compile
 
 ### 1.2 FlowwTip.sol — Tips one-shot
 
-- [ ] Écrire le contrat `FlowwTip.sol`
-  - [ ] `tipETH(address creator, string message)` — tip en ETH natif
-  - [ ] `tipERC20(address creator, address token, uint256 amount, string message)` — tip en USDC
-  - [ ] Fee configurable (2.5% par défaut, max 10%)
-  - [ ] `setFeeBps()` + `setTreasury()` — onlyOwner
-  - [ ] Utiliser `SafeERC20.safeTransferFrom` (pas `transferFrom` brut)
-  - [ ] Event `Tipped(from, creator, token, amount, fee, message)`
-- [ ] Tests Forge :
-  - [ ] Tip ETH : montant correct reçu par le créateur et le treasury
-  - [ ] Tip ERC20 : idem avec mock USDC
-  - [ ] Fee calculation correcte (edge cases : petits montants, montants max)
-  - [ ] Revert si montant = 0
-  - [ ] Revert si fee > 10%
-  - [ ] Reentrancy protection
-  - [ ] Fuzz test sur les montants
+- [x] Écrire le contrat `FlowwTip.sol`
+  - [x] `tipETH(address creator, string message)` — tip en ETH natif
+  - [x] `tipERC20(address creator, address token, uint256 amount, string message)` — tip en USDC
+  - [x] Fee configurable (2.5% par défaut, max 10%)
+  - [x] `setFeeBps()` + `setTreasury()` — onlyOwner
+  - [x] Utiliser `SafeERC20.safeTransferFrom` (pas `transferFrom` brut)
+  - [x] Event `Tipped(from, creator, token, amount, fee, message)`
+- [x] Tests Forge (17 tests) :
+  - [x] Tip ETH : montant correct reçu par le créateur et le treasury
+  - [x] Tip ERC20 : idem avec mock USDC
+  - [x] Fee calculation correcte (edge cases : petits montants, montants max)
+  - [x] Revert si montant = 0
+  - [x] Revert si fee > 10%
+  - [x] Reentrancy protection
+  - [x] Fuzz test sur les montants
 
 ### 1.3 FlowwSubscription.sol — Abonnements récurrents
 
-- [ ] Écrire le contrat `FlowwSubscription.sol`
-  - [ ] `createPlan(uint256 pricePerMonth)` — créateur crée un tier
-  - [ ] `subscribe(address creator, uint256 planId)` — fan s'abonne (charge USDC)
-  - [ ] `renew(address subscriber, address creator)` — renouvellement (callable par anyone)
-  - [ ] `cancel(address creator)` — fan annule
-  - [ ] `isActive(address subscriber, address creator)` — view
-  - [ ] Fee 5% sur chaque charge
-  - [ ] Utiliser `SafeERC20.safeTransferFrom`
-- [ ] Tests Forge :
-  - [ ] Créer un plan + vérifier storage
-  - [ ] Subscribe : premier paiement déduit, subscription active
-  - [ ] Renew : revert si pas encore dû, passe si dû
-  - [ ] Cancel : subscription inactive
-  - [ ] isActive : true avant expiration, false après
-  - [ ] Fuzz test sur les prix
+- [x] Écrire le contrat `FlowwSubscription.sol`
+  - [x] `createPlan(uint256 pricePerMonth)` — créateur crée un tier
+  - [x] `subscribe(address creator, uint256 planId)` — fan s'abonne (charge USDC)
+  - [x] `renew(address subscriber, address creator)` — renouvellement (callable par anyone)
+  - [x] `cancel(address creator)` — fan annule
+  - [x] `isActive(address subscriber, address creator)` — view
+  - [x] Fee 5% sur chaque charge
+  - [x] Utiliser `SafeERC20.safeTransferFrom`
+- [x] Tests Forge (15 tests) :
+  - [x] Créer un plan + vérifier storage
+  - [x] Subscribe : premier paiement déduit, subscription active
+  - [x] Renew : revert si pas encore dû, passe si dû
+  - [x] Cancel : subscription inactive
+  - [x] isActive : true avant expiration, false après
+  - [x] Fuzz test sur les prix
 
 ### 1.4 FlowwGate.sol — NFT Passes (ERC-1155)
 
-- [ ] Écrire le contrat `FlowwGate.sol`
-  - [ ] `createPass(uint256 price, uint256 maxSupply, string uri)` — créateur crée un pass
-  - [ ] `mintPass(uint256 passId)` — fan mint (paye en ETH)
-  - [ ] `hasAccess(address user, uint256 passId)` — view
-  - [ ] `uri(uint256 passId)` — override pour metadata
-  - [ ] Fee 2.5% sur le mint
-  - [ ] Utiliser `.call{value}` au lieu de `.transfer()` (compatibilité smart wallets AGW)
-- [ ] Tests Forge :
-  - [ ] Créer un pass + vérifier metadata
-  - [ ] Mint : NFT reçu, ETH distribué (creator + treasury)
-  - [ ] Sold out : revert si maxSupply atteint
-  - [ ] hasAccess : true si balance > 0
-  - [ ] Revert si prix insuffisant
+- [x] Écrire le contrat `FlowwGate.sol`
+  - [x] `createPass(uint256 price, uint256 maxSupply, string uri)` — créateur crée un pass
+  - [x] `mintPass(uint256 passId)` — fan mint (paye en ETH)
+  - [x] `hasAccess(address user, uint256 passId)` — view
+  - [x] `uri(uint256 passId)` — override pour metadata
+  - [x] Fee 2.5% sur le mint
+  - [x] Utiliser `.call{value}` au lieu de `.transfer()` (compatibilité smart wallets AGW)
+- [x] Tests Forge (14 tests) :
+  - [x] Créer un pass + vérifier metadata
+  - [x] Mint : NFT reçu, ETH distribué (creator + treasury)
+  - [x] Sold out : revert si maxSupply atteint
+  - [x] hasAccess : true si balance > 0
+  - [x] Revert si prix insuffisant
 
 ### 1.5 Déploiement testnet
 
-- [ ] Écrire `script/Deploy.s.sol` (deploy les 3 contrats + set treasury)
+- [x] Écrire `script/Deploy.s.sol` (deploy les 3 contrats + set treasury)
 - [ ] Deploy sur Abstract testnet
 - [ ] Vérifier les contrats sur Abscan (testnet)
 - [ ] Sauvegarder les adresses déployées dans `contracts/deployments/testnet.json`
