@@ -4,7 +4,13 @@ import { db } from "../db";
 import { tips, subscriptions } from "../db/schema";
 import { authMiddleware } from "../middleware/auth";
 
-const app = new Hono();
+type AuthEnv = {
+  Variables: {
+    walletAddress: string;
+  };
+};
+
+const app = new Hono<AuthEnv>();
 
 // All analytics routes require auth
 app.use("/*", authMiddleware);

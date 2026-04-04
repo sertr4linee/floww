@@ -45,24 +45,25 @@ async function backfillTips(fromBlock: bigint) {
 
   for (const log of logs) {
     const { from, creator, token, amount, fee, message } = log.args;
+    if (!from || !creator || amount === undefined || fee === undefined) continue;
     await db
       .insert(tips)
       .values({
         id: log.transactionHash!,
-        fromAddress: from!.toLowerCase(),
-        creatorAddress: creator!.toLowerCase(),
-        token: token === ZERO_ADDRESS ? null : token,
-        amount: amount!.toString(),
-        fee: fee!.toString(),
+        fromAddress: from.toLowerCase(),
+        creatorAddress: creator.toLowerCase(),
+        token: token === ZERO_ADDRESS ? null : token ?? null,
+        amount: amount.toString(),
+        fee: fee.toString(),
         message: message ?? "",
-        blockNumber: log.blockNumber!,
+        blockNumber: log.blockNumber ?? 0n,
         blockTimestamp: new Date(),
       })
       .onConflictDoNothing();
   }
 
   if (logs.length > 0) {
-    const lastBlock = logs[logs.length - 1].blockNumber!;
+    const lastBlock = logs[logs.length - 1].blockNumber ?? 0n;
     await saveLastBlock("tip", lastBlock);
     console.log(`[indexer] Backfilled ${logs.length} tips up to block ${lastBlock}`);
   }
