@@ -84,13 +84,14 @@ async function backfillSubscriptions(fromBlock: bigint) {
 
   for (const log of subLogs) {
     const { subscriber, creator, planId } = log.args;
+    if (!subscriber || !creator || planId === undefined) continue;
     await db
       .insert(subscriptions)
       .values({
         id: log.transactionHash!,
-        subscriberAddress: subscriber!.toLowerCase(),
-        creatorAddress: creator!.toLowerCase(),
-        planId: Number(planId!),
+        subscriberAddress: subscriber.toLowerCase(),
+        creatorAddress: creator.toLowerCase(),
+        planId: Number(planId),
         nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         active: true,
       })
