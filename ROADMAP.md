@@ -94,7 +94,7 @@
 - [ ] Vérifier les contrats sur Abscan (testnet)
 - [ ] Sauvegarder les adresses déployées dans `contracts/deployments/testnet.json`
 - [ ] Tester manuellement via `cast` : tip ETH, tip USDC, create plan, subscribe, mint pass
-- [ ] Exporter les ABIs (`forge inspect FlowwTip abi > abis/FlowwTip.json`)
+- [x] Exporter les ABIs (`forge inspect FlowwTip abi > abis/FlowwTip.json`)
 
 ---
 
