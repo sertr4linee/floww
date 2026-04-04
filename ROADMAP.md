@@ -90,9 +90,9 @@
 ### 1.5 Déploiement testnet
 
 - [x] Écrire `script/Deploy.s.sol` (deploy les 3 contrats + set treasury)
-- [ ] Deploy sur Abstract testnet
+- [x] Deploy sur Abstract testnet
 - [ ] Vérifier les contrats sur Abscan (testnet)
-- [ ] Sauvegarder les adresses déployées dans `contracts/deployments/testnet.json`
+- [x] Sauvegarder les adresses déployées dans `contracts/deployments/testnet.json`
 - [ ] Tester manuellement via `cast` : tip ETH, tip USDC, create plan, subscribe, mint pass
 - [x] Exporter les ABIs (`forge inspect FlowwTip abi > abis/FlowwTip.json`)
 

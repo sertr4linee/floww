@@ -1,1 +1,13 @@
-{}
+{
+  "network": "Abstract Testnet",
+  "chainId": 11124,
+  "deployedAt": "2026-04-05",
+  "deployer": "0x32C6B3746b1d3a2B4685A4694Db0258E8A05b3A9",
+  "treasury": "0x32C6B3746b1d3a2B4685A4694Db0258E8A05b3A9",
+  "contracts": {
+    "MockUSDC": "0x549085E59F8E1BD621e6b009f3499e261735CD29",
+    "FlowwTip": "0x92E1B4017e9914E90bdd2bcf13aD3219C43D61FC",
+    "FlowwSubscription": "0xC4b0001Dc0964B4F21A112DDd38bffC2D0Cc1Ca9",
+    "FlowwGate": "0x4d3Ed14f91CCC2f95510f257C981dfc753dC2970"
+  }
+}
