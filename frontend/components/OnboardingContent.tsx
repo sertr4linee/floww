@@ -1,28 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import { useLoginWithAbstract } from "@abstract-foundation/agw-react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
 export function OnboardingContent() {
-  const { address } = useAccount();
-  const { login } = useLoginWithAbstract();
-  const router = useRouter();
+  const { address, isConnected, isConnecting } = useAccount();
+  const { login, logout } = useLoginWithAbstract();
 
-  const [step, setStep] = useState(address ? 2 : 1);
+  const [step, setStep] = useState(1);
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Auto-advance to step 2 when wallet connects
+  useEffect(() => {
+    if (isConnected && address && step === 1) {
+      setStep(2);
+    }
+  }, [isConnected, address, step]);
+
   const handleConnect = async () => {
-    await login();
-    setStep(2);
+    try {
+      await login();
+    } catch (err) {
+      console.error("Login failed:", err);
+    }
   };
 
   const handleCreateProfile = async () => {
@@ -31,12 +39,12 @@ export function OnboardingContent() {
     setError("");
 
     try {
-      // In production, sign a message for auth
+      // TODO: in production, sign a message with the wallet for auth
       const res = await fetch(`${API}/api/creators/me`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Signature 0x", // placeholder
+          Authorization: "Signature placeholder",
           "X-Message": "create-profile",
         },
         body: JSON.stringify({
@@ -55,10 +63,14 @@ export function OnboardingContent() {
 
       setStep(3);
     } catch {
-      setError("Network error");
+      setError("Network error — is the backend running?");
     }
     setLoading(false);
   };
+
+  const shortAddress = address
+    ? `${address.slice(0, 6)}...${address.slice(-4)}`
+    : null;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -67,7 +79,23 @@ export function OnboardingContent() {
         <Link href="/" className="font-mono text-sm font-bold text-[var(--acid)]">
           FLOWW
         </Link>
-        <span className="font-mono text-xs text-[var(--text-dim)]">ONBOARDING</span>
+        <div className="flex items-center gap-3">
+          {isConnected && shortAddress ? (
+            <>
+              <span className="font-mono text-xs text-[var(--acid)]">
+                ● {shortAddress}
+              </span>
+              <button
+                onClick={() => logout()}
+                className="font-mono text-xs text-[var(--muted)] hover:text-[var(--text)] transition-colors"
+              >
+                ✕
+              </button>
+            </>
+          ) : (
+            <span className="font-mono text-xs text-[var(--text-dim)]">ONBOARDING</span>
+          )}
+        </div>
       </nav>
 
       <div className="flex-1 flex items-center justify-center px-6">
@@ -77,7 +105,7 @@ export function OnboardingContent() {
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
-                className={`flex-1 h-0.5 ${
+                className={`flex-1 h-0.5 transition-colors ${
                   s <= step ? "bg-[var(--acid)]" : "bg-[var(--border)]"
                 }`}
               />
@@ -99,9 +127,10 @@ export function OnboardingContent() {
               </p>
               <button
                 onClick={handleConnect}
-                className="w-full font-mono py-3 bg-[var(--acid)] text-black font-bold text-sm hover:bg-[var(--acid-dim)] transition-colors"
+                disabled={isConnecting}
+                className="w-full font-mono py-3 bg-[var(--acid)] text-black font-bold text-sm hover:bg-[var(--acid-dim)] transition-colors disabled:opacity-60"
               >
-                CONNECT →
+                {isConnecting ? "CONNECTING..." : "CONNECT →"}
               </button>
             </div>
           )}
@@ -115,7 +144,16 @@ export function OnboardingContent() {
               <h1 className="font-mono text-3xl font-bold text-[var(--text)] mt-2 mb-4">
                 Create your page
               </h1>
-              <p className="text-[var(--text-dim)] mb-8 leading-relaxed">
+
+              {/* Connection status */}
+              <div className="flex items-center gap-2 mb-6 px-3 py-2 border border-[var(--acid)]/20 bg-[var(--acid)]/5">
+                <span className="w-2 h-2 rounded-full bg-[var(--acid)]" />
+                <span className="font-mono text-xs text-[var(--acid)]">
+                  Connected as {shortAddress}
+                </span>
+              </div>
+
+              <p className="text-[var(--text-dim)] mb-6 leading-relaxed">
                 Pick a username — this will be your public URL: <span className="text-[var(--acid)]">floww.xyz/username</span>
               </p>
 
