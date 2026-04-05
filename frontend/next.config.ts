@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  bundler: "webpack",
   webpack: (config) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
@@ -10,9 +9,15 @@ const nextConfig: NextConfig = {
       tls: false,
       crypto: false,
     };
+    // Fix ESM resolution for wagmi/viem
+    config.resolve.extensionAlias = {
+      ".js": [".ts", ".tsx", ".js", ".jsx"],
+      ".mjs": [".mts", ".mjs"],
+    };
     config.externals.push("pino-pretty", "encoding");
     return config;
   },
+  turbopack: {},
   serverExternalPackages: [
     "@abstract-foundation/agw-react",
     "@abstract-foundation/agw-client",
