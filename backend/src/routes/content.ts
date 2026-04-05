@@ -9,6 +9,19 @@ import { randomUUIDv7 } from "bun";
 
 const app = new Hono();
 
+// GET /api/my/posts — creator's own posts (auth required) — MUST be before /:identifier
+app.get("/my/posts", authMiddleware, async (c) => {
+  const walletAddress = c.get("walletAddress");
+
+  const result = await db
+    .select()
+    .from(posts)
+    .where(eq(posts.creatorId, walletAddress))
+    .orderBy(desc(posts.publishedAt));
+
+  return c.json(result);
+});
+
 // GET /api/creators/:identifier/posts — public (gated content shows as locked)
 app.get("/:identifier/posts", async (c) => {
   const identifier = c.req.param("identifier");
@@ -100,19 +113,6 @@ app.get("/posts/:id", async (c) => {
   }
 
   return c.json(post);
-});
-
-// GET /api/my/posts — creator's own posts (auth required)
-app.get("/my/posts", authMiddleware, async (c) => {
-  const walletAddress = c.get("walletAddress");
-
-  const result = await db
-    .select()
-    .from(posts)
-    .where(eq(posts.creatorId, walletAddress))
-    .orderBy(desc(posts.publishedAt));
-
-  return c.json(result);
 });
 
 // POST /api/posts — auth required
