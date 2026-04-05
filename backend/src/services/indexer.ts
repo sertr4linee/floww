@@ -228,6 +228,9 @@ function watchSubscriptions() {
 
         await saveLastBlock("subscription", log.blockNumber!);
         console.log(`[indexer] New sub: ${subscriber} → ${creator}`);
+
+        // Send email notification
+        notifyNewSubscriber(creator!, subscriber!, Number(planId!)).catch(() => {});
       }
     },
   });
