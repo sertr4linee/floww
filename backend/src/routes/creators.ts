@@ -1,19 +1,26 @@
 import { Hono } from "hono";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import { db } from "../db";
 import { creators } from "../db/schema";
 import { authMiddleware } from "../middleware/auth";
 
 const app = new Hono();
 
-// GET /api/creators/:username — public
-app.get("/:username", async (c) => {
-  const username = c.req.param("username");
+// GET /api/creators/:identifier — public (lookup by username OR wallet address)
+app.get("/:identifier", async (c) => {
+  const identifier = c.req.param("identifier");
+
+  // If it looks like an address (starts with 0x), search by id too
+  const isAddress = identifier.startsWith("0x");
 
   const [creator] = await db
     .select()
     .from(creators)
-    .where(eq(creators.username, username))
+    .where(
+      isAddress
+        ? or(eq(creators.username, identifier), eq(creators.id, identifier.toLowerCase()))
+        : eq(creators.username, identifier)
+    )
     .limit(1);
 
   if (!creator) {

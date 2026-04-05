@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { eq, desc } from "drizzle-orm";
+import { eq, or, desc } from "drizzle-orm";
 import { db } from "../db";
 import { posts, creators } from "../db/schema";
 import { authMiddleware } from "../middleware/auth";
@@ -9,15 +9,20 @@ import { randomUUIDv7 } from "bun";
 
 const app = new Hono();
 
-// GET /api/creators/:username/posts — public (gated content shows as locked)
-app.get("/:username/posts", async (c) => {
-  const username = c.req.param("username");
+// GET /api/creators/:identifier/posts — public (gated content shows as locked)
+app.get("/:identifier/posts", async (c) => {
+  const identifier = c.req.param("identifier");
   const userAddress = c.req.header("X-Wallet-Address");
+  const isAddress = identifier.startsWith("0x");
 
   const [creator] = await db
     .select()
     .from(creators)
-    .where(eq(creators.username, username))
+    .where(
+      isAddress
+        ? or(eq(creators.username, identifier), eq(creators.id, identifier.toLowerCase()))
+        : eq(creators.username, identifier)
+    )
     .limit(1);
 
   if (!creator) {
