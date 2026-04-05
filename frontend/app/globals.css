@@ -1,26 +1,67 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap");
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --acid: #b8ff35;
+  --acid-dim: #8fcc1f;
+  --black: #080808;
+  --surface: #111111;
+  --surface-2: #1a1a1a;
+  --border: #222222;
+  --muted: #555555;
+  --text: #e8e8e8;
+  --text-dim: #777777;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* { box-sizing: border-box; }
+
+html {
+  background: var(--black);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body { background: var(--black); min-height: 100vh; }
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--border); }
+::-webkit-scrollbar-thumb:hover { background: var(--acid); }
+::selection { background: var(--acid); color: var(--black); }
+
+.font-mono { font-family: "Space Mono", monospace !important; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, 2px); }
+  80% { transform: translate(1px, -2px); }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.animate-fade-up { opacity: 0; animation: fadeUp 0.5s ease forwards; }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.6s; }
+
+.grid-bg {
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
+
+.acid-glow { box-shadow: 0 0 20px rgba(184,255,53,0.15), 0 0 60px rgba(184,255,53,0.05); }
+.acid-text-glow { text-shadow: 0 0 20px rgba(184,255,53,0.4); }
