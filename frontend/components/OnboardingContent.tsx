@@ -34,7 +34,11 @@ export function OnboardingContent() {
   };
 
   const handleCreateProfile = async () => {
-    if (!address || !username) return;
+    if (!address || !username) {
+      console.error("[onboarding] Missing address or username", { address, username });
+      setError(!address ? "Wallet not connected" : "Username required");
+      return;
+    }
     setLoading(true);
     setError("");
 
@@ -60,7 +64,8 @@ export function OnboardingContent() {
       }
 
       setStep(3);
-    } catch {
+    } catch (err) {
+      console.error("[onboarding] Network error:", err);
       setError("Network error — is the backend running?");
     }
     setLoading(false);
