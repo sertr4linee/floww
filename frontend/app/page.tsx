@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LandingNav } from "@/components/LandingNav";
 
 const FEES = [
   { platform: "Patreon", tip: "8–12%", sub: "8–12%", nft: "—" },
@@ -27,23 +28,7 @@ const STEPS = [
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 border-b border-[var(--border)] bg-[var(--black)]/90 backdrop-blur-sm">
-        <span className="font-mono text-lg font-bold tracking-tight text-[var(--acid)] acid-text-glow">
-          FLOWW
-        </span>
-        <div className="flex items-center gap-6">
-          <Link href="/dashboard" className="text-sm text-[var(--text-dim)] hover:text-[var(--text)] transition-colors">
-            Dashboard
-          </Link>
-          <Link
-            href="/onboarding"
-            className="font-mono text-sm px-4 py-2 bg-[var(--acid)] text-black font-bold hover:bg-[var(--acid-dim)] transition-colors"
-          >
-            START_
-          </Link>
-        </div>
-      </nav>
+      <LandingNav />
 
       <main className="flex-1 pt-16">
         {/* Hero */}

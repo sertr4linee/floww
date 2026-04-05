@@ -3,7 +3,9 @@
 import { useAccount } from "wagmi";
 import { useLoginWithAbstract } from "@abstract-foundation/agw-react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ConnectButton } from "@/components/ConnectButton";
+import { useCreatorProfile } from "@/hooks/useCreatorProfile";
 import Link from "next/link";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
@@ -27,14 +29,23 @@ interface Tip {
 export function DashboardContent() {
   const { address } = useAccount();
   const { login } = useLoginWithAbstract();
+  const router = useRouter();
+  const { profile, loading: profileLoading, hasProfile, isConnected } = useCreatorProfile();
+
   const [stats, setStats] = useState<Stats | null>(null);
   const [tips, setTips] = useState<Tip[]>([]);
   const [tab, setTab] = useState<"overview" | "tips">("overview");
 
+  // Redirect to onboarding if connected but no profile
+  useEffect(() => {
+    if (!profileLoading && isConnected && !hasProfile) {
+      router.push("/onboarding");
+    }
+  }, [profileLoading, isConnected, hasProfile, router]);
+
   useEffect(() => {
     if (!address) return;
 
-    // For now, fetch without auth for demo purposes
     fetch(`${API}/api/dashboard/stats`, {
       headers: { "X-Wallet-Address": address },
     })
@@ -72,7 +83,12 @@ export function DashboardContent() {
     );
   }
 
+  if (profileLoading) {
+    return <div className="min-h-screen bg-[var(--black)]" />;
+  }
+
   const shortAddr = `${address.slice(0, 6)}...${address.slice(-4)}`;
+  const displayName = profile?.displayName ?? profile?.username ?? shortAddr;
 
   return (
     <div className="min-h-screen">
@@ -88,15 +104,17 @@ export function DashboardContent() {
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <div>
-            <h1 className="font-mono text-2xl font-bold text-[var(--text)]">Dashboard</h1>
-            <p className="font-mono text-xs text-[var(--text-dim)] mt-1">{shortAddr}</p>
+            <h1 className="font-mono text-2xl font-bold text-[var(--text)]">{displayName}</h1>
+            <p className="font-mono text-xs text-[var(--text-dim)] mt-1">@{profile?.username} · {shortAddr}</p>
           </div>
-          <Link
-            href={`/${shortAddr}`}
-            className="font-mono text-xs text-[var(--acid)] border border-[var(--acid)]/30 px-3 py-1.5 hover:bg-[var(--acid)]/10 transition-colors"
-          >
-            VIEW PAGE →
-          </Link>
+          {profile && (
+            <Link
+              href={`/${profile.username}`}
+              className="font-mono text-xs text-[var(--acid)] border border-[var(--acid)]/30 px-3 py-1.5 hover:bg-[var(--acid)]/10 transition-colors"
+            >
+              VIEW PAGE →
+            </Link>
+          )}
         </div>
 
         {/* Stats cards */}

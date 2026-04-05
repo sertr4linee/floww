@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import { useLoginWithAbstract } from "@abstract-foundation/agw-react";
+import { useRouter } from "next/navigation";
+import { useCreatorProfile } from "@/hooks/useCreatorProfile";
 import Link from "next/link";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
@@ -10,6 +12,8 @@ const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 export function OnboardingContent() {
   const { address, isConnected, isConnecting } = useAccount();
   const { login, logout } = useLoginWithAbstract();
+  const router = useRouter();
+  const { hasProfile, loading: profileLoading } = useCreatorProfile();
 
   const [step, setStep] = useState(1);
   const [username, setUsername] = useState("");
@@ -18,12 +22,19 @@ export function OnboardingContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // If already has profile, redirect to dashboard
+  useEffect(() => {
+    if (!profileLoading && isConnected && hasProfile) {
+      router.push("/dashboard");
+    }
+  }, [profileLoading, isConnected, hasProfile, router]);
+
   // Auto-advance to step 2 when wallet connects
   useEffect(() => {
-    if (isConnected && address && step === 1) {
+    if (isConnected && address && step === 1 && !hasProfile) {
       setStep(2);
     }
-  }, [isConnected, address, step]);
+  }, [isConnected, address, step, hasProfile]);
 
   const handleConnect = async () => {
     try {
