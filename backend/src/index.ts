@@ -5,6 +5,7 @@ import creatorsRoutes from "./routes/creators";
 import contentRoutes from "./routes/content";
 import analyticsRoutes from "./routes/analytics";
 import { startIndexer } from "./services/indexer";
+import { startRenewalCron } from "./jobs/renewal";
 
 const app = new Hono();
 
