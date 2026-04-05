@@ -1,13 +1,10 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useAccount } from "wagmi";
 import { useLoginWithAbstract } from "@abstract-foundation/agw-react";
 import { useEffect, useState } from "react";
 import { ConnectButton } from "@/components/ConnectButton";
 import Link from "next/link";
-
-export const dynamic_config = "force-dynamic";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
