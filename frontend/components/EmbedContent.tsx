@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { TipButton } from "@/components/TipButton";
 
-export default function EmbedPage() {
+export function EmbedContent() {
   const params = useParams();
   const address = params.address as string;
   const short = `${address.slice(0, 6)}...${address.slice(-4)}`;
