@@ -20,8 +20,8 @@
   ```
 - [x] Configurer `.gitignore` (node_modules, .env, out/, cache/, broadcast/)
 - [x] Créer les `.env.example` pour chaque package
-- [ ] Créer un wallet de dev (clé privée testnet uniquement)
-- [ ] Récupérer des ETH testnet Abstract via le faucet
+- [x] Créer un wallet de dev (clé privée testnet uniquement)
+- [x] Récupérer des ETH testnet Abstract via le faucet
 
 ---
 
@@ -111,7 +111,7 @@
 - [x] Configurer `tsconfig.json` (strict, paths)
 - [x] Créer `src/index.ts` — entry point Hono
 - [x] Configurer le `.env` (DATABASE_URL, RPC_URL, contract addresses)
-- [ ] Vérifier que `bun run src/index.ts` démarre le serveur
+- [x] Vérifier que `bun run src/index.ts` démarre le serveur
 
 ### 2.2 Base de données — Schema Drizzle
 
@@ -123,9 +123,9 @@
   - [x] Table `passes_minted` (id/txHash, passId, buyerAddress, blockTimestamp)
 - [x] Créer `src/db/index.ts` — connection pool
 - [x] Configurer `drizzle.config.ts`
-- [ ] Provisionner une DB PostgreSQL (Neon gratuit ou Supabase ou local Docker)
-- [ ] `bunx drizzle-kit push` — appliquer le schema
-- [ ] Vérifier les tables créées
+- [x] Provisionner une DB PostgreSQL (Docker Compose local)
+- [x] `bunx drizzle-kit push` — appliquer le schema
+- [x] Vérifier les tables créées
 
 ### 2.3 Auth — Vérification signature wallet
 
@@ -133,7 +133,7 @@
   - [x] Le frontend envoie un header `Authorization: Signature <sig>` + `X-Message: <message>`
   - [x] Le backend vérifie avec `viem.recoverMessageAddress()` → extrait l'adresse wallet
   - [x] Injecte `c.set("walletAddress", address)` dans le contexte Hono
-- [ ] Tester avec un script : signer un message, appeler l'API, vérifier
+- [ ] Tester auth avec un script end-to-end
 
 ### 2.4 API REST — Routes
 
