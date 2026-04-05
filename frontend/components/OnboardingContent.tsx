@@ -39,13 +39,11 @@ export function OnboardingContent() {
     setError("");
 
     try {
-      // TODO: in production, sign a message with the wallet for auth
       const res = await fetch(`${API}/api/creators/me`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Signature placeholder",
-          "X-Message": "create-profile",
+          "X-Wallet-Address": address,
         },
         body: JSON.stringify({
           username,

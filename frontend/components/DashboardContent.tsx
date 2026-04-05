@@ -35,22 +35,15 @@ export function DashboardContent() {
     if (!address) return;
 
     // For now, fetch without auth for demo purposes
-    // In production, sign a message and send the signature
     fetch(`${API}/api/dashboard/stats`, {
-      headers: {
-        Authorization: "Signature 0x",
-        "X-Message": "dashboard",
-      },
+      headers: { "X-Wallet-Address": address },
     })
       .then((r) => r.json())
       .then(setStats)
       .catch(() => {});
 
     fetch(`${API}/api/dashboard/tips`, {
-      headers: {
-        Authorization: "Signature 0x",
-        "X-Message": "dashboard",
-      },
+      headers: { "X-Wallet-Address": address },
     })
       .then((r) => r.json())
       .then((d) => setTips(d.data ?? []))

@@ -9,6 +9,14 @@ type AuthEnv = {
 };
 
 export const authMiddleware = createMiddleware<AuthEnv>(async (c, next) => {
+  // Dev mode: accept X-Wallet-Address header directly
+  const devWallet = c.req.header("X-Wallet-Address");
+  if (devWallet && process.env.NODE_ENV !== "production") {
+    c.set("walletAddress", devWallet.toLowerCase());
+    await next();
+    return;
+  }
+
   const authHeader = c.req.header("Authorization");
   const message = c.req.header("X-Message");
 
