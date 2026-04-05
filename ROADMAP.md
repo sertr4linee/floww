@@ -181,9 +181,9 @@
 ### 2.8 Tests & deploy
 
 - [ ] Tests API avec `bun test` (au minimum : CRUD créateurs, accès gated)
-- [ ] Dockeriser le backend (`Dockerfile` Bun)
-- [ ] Déployer sur Railway ou Fly.io (staging)
-- [ ] Vérifier que l'indexer tourne et capte les events testnet
+- [x] Dockeriser le backend (`Dockerfile` Bun)
+- [x] Docker Compose (PostgreSQL + backend) fonctionnel en dev
+- [x] Vérifier que l'indexer tourne et capte les events testnet
 
 ---
 
