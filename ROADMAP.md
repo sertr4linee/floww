@@ -191,84 +191,84 @@
 
 ### 3.1 Setup projet
 
-- [ ] `npx create-next-app@latest frontend --typescript --tailwind --app`
-- [ ] Installer les deps :
+- [x] `npx create-next-app@latest frontend --typescript --tailwind --app`
+- [x] Installer les deps :
   ```
-  npm install @abstract-money/agw-react wagmi viem @tanstack/react-query zustand
+  npm install @abstract-foundation/agw-react wagmi viem @tanstack/react-query zustand
   ```
-- [ ] Configurer `lib/wagmi.ts` (config Wagmi + AGW connector + `ssr: true`)
-- [ ] Créer `providers.tsx` (WagmiProvider + QueryClientProvider, `"use client"`)
-- [ ] Brancher les providers dans `app/layout.tsx`
-- [ ] Configurer les variables d'env : `NEXT_PUBLIC_USDC_ADDRESS`, `NEXT_PUBLIC_TIP_CONTRACT`, etc.
-- [ ] Créer `lib/contracts.ts` — ABIs + adresses des contrats
-- [ ] Vérifier que `npm run dev` démarre sans erreur
+- [x] Configurer `lib/wagmi.ts` (config Wagmi + AGW connector + `ssr: true`)
+- [x] Créer `providers.tsx` (WagmiProvider + QueryClientProvider, `"use client"`)
+- [x] Brancher les providers dans `app/layout.tsx`
+- [x] Configurer les variables d'env : `NEXT_PUBLIC_USDC_ADDRESS`, `NEXT_PUBLIC_TIP_CONTRACT`, etc.
+- [x] Créer `lib/contracts.ts` — ABIs + adresses des contrats
+- [x] Vérifier que `npm run dev` démarre sans erreur
 
 ### 3.2 Landing page
 
-- [ ] `app/page.tsx` — page d'accueil
-  - [ ] Hero : titre + tagline + CTA "Create your page"
-  - [ ] Section : comment ça marche (3 étapes)
-  - [ ] Section : avantages vs Patreon/Ko-fi (fees, vitesse, pas de censure)
-  - [ ] Footer avec liens
-- [ ] Design responsive (mobile-first)
-- [ ] Metadata SEO (title, description, OG image)
+- [x] `app/page.tsx` — page d'accueil
+  - [x] Hero : titre + tagline + CTA "Create your page"
+  - [x] Section : comment ça marche (3 étapes)
+  - [x] Section : avantages vs Patreon/Ko-fi (fees, vitesse, pas de censure)
+  - [x] Footer avec liens
+- [x] Design responsive (mobile-first)
+- [x] Metadata SEO (title, description, OG image)
 
 ### 3.3 Page créateur (SSR)
 
-- [ ] `app/[username]/page.tsx` — Server Component
-  - [ ] Fetch profil créateur depuis l'API backend
-  - [ ] `generateMetadata()` — titre, description, OpenGraph image
-  - [ ] Afficher : avatar, displayName, bio
-  - [ ] Afficher la liste des posts (publics en clair, exclusifs avec cadenas)
-- [ ] `app/[username]/loading.tsx` — skeleton loader
-- [ ] `app/[username]/not-found.tsx` — 404 créateur inexistant
+- [x] `app/[username]/page.tsx` — Server Component
+  - [x] Fetch profil créateur depuis l'API backend
+  - [x] `generateMetadata()` — titre, description, OpenGraph image
+  - [x] Afficher : avatar, displayName, bio
+  - [x] Afficher la liste des posts (publics en clair, exclusifs avec cadenas)
+- [x] `app/[username]/loading.tsx` — skeleton loader
+- [x] `app/[username]/not-found.tsx` — 404 créateur inexistant
 
 ### 3.4 Composants wallet (Client Components)
 
-- [ ] `components/ConnectButton.tsx` — bouton login AGW (email/Google)
-  - [ ] Affiche l'adresse tronquée si connecté
-  - [ ] Bouton déconnexion
-- [ ] `components/TipButton.tsx` — bouton + modal de tip
-  - [ ] Choix montant (preset $1, $5, $10, custom)
-  - [ ] Choix token (ETH ou USDC)
-  - [ ] Champ message optionnel
-  - [ ] Appel `useTip()` hook
-  - [ ] État : pending → confirming → success (avec animation)
+- [x] `components/ConnectButton.tsx` — bouton login AGW (email/Google)
+  - [x] Affiche l'adresse tronquée si connecté
+  - [x] Bouton déconnexion
+- [x] `components/TipButton.tsx` — bouton + modal de tip
+  - [x] Choix montant (preset $1, $5, $10, custom)
+  - [x] Choix token (ETH ou USDC)
+  - [x] Champ message optionnel
+  - [x] Appel `useTip()` hook
+  - [x] État : pending → confirming → success
   - [ ] Approve USDC si premier tip ERC20
-- [ ] `components/SubscribeButton.tsx` — abonnement
+- [x] `components/SubscribeButton.tsx` — abonnement
   - [ ] Affiche les tiers disponibles (fetch depuis le contrat ou API)
-  - [ ] Sélection tier → appel `useSubscribe()` hook
+  - [x] Sélection tier → appel `useSubscribe()` hook
   - [ ] Approve USDC → subscribe en une transaction
-  - [ ] État : pending → confirming → success
+  - [x] État : pending → confirming → success
 - [ ] `components/PassCard.tsx` — mint un NFT pass
   - [ ] Affiche prix, supply restante, description
   - [ ] Bouton mint → appel contrat FlowwGate.mintPass()
 
 ### 3.5 Hooks blockchain
 
-- [ ] `hooks/useTip.ts` — tip ETH ou USDC via FlowwTip
-- [ ] `hooks/useSubscribe.ts` — subscribe via FlowwSubscription
+- [x] `hooks/useTip.ts` — tip ETH ou USDC via FlowwTip
+- [x] `hooks/useSubscribe.ts` — subscribe via FlowwSubscription
 - [ ] `hooks/useMintPass.ts` — mint via FlowwGate
 - [ ] `hooks/useAccess.ts` — vérifier si le user a accès (appel API ou readContract)
-- [ ] `hooks/useApproveUSDC.ts` — approve le contrat à dépenser les USDC du user
+- [x] `hooks/useApproveUSDC.ts` — approve le contrat à dépenser les USDC du user
 
 ### 3.6 Post exclusif — affichage gated
 
-- [ ] `components/PostCard.tsx`
-  - [ ] Si public → afficher le contenu
-  - [ ] Si exclusif + pas accès → cadenas + CTA "Subscribe to unlock" ou "Mint pass to unlock"
+- [x] `components/PostCard.tsx`
+  - [x] Si public → afficher le contenu
+  - [x] Si exclusif + pas accès → cadenas + CTA "Subscribe to unlock"
   - [ ] Si exclusif + accès → fetch le contenu IPFS et afficher
 - [ ] Supporter texte, images, vidéos embed
 
 ### 3.7 Dashboard créateur
 
-- [ ] `app/dashboard/page.tsx` — Client Component (auth required)
-  - [ ] Guard : rediriger si pas connecté
-- [ ] `app/dashboard/layout.tsx` — sidebar navigation
-- [ ] Vue "Overview" :
-  - [ ] Revenus totaux (ETH + USDC)
-  - [ ] Nombre d'abonnés actifs
-  - [ ] Nombre de tips ce mois
+- [x] `app/dashboard/page.tsx` — Client Component (auth required)
+  - [x] Guard : rediriger si pas connecté
+- [x] `app/dashboard/layout.tsx` — force-dynamic
+- [x] Vue "Overview" :
+  - [x] Revenus totaux (ETH + USDC)
+  - [x] Nombre d'abonnés actifs
+  - [x] Nombre de tips ce mois
   - [ ] Graphique revenus (30 derniers jours)
 - [ ] Vue "Posts" :
   - [ ] Liste des posts publiés
@@ -288,7 +288,7 @@
 
 ### 3.9 Deploy
 
-- [ ] Configurer `next.config.ts` (images domains, env vars)
+- [x] Configurer `next.config.ts` (webpack fallbacks, extensionAlias)
 - [ ] Déployer sur Vercel
 - [ ] Configurer le domaine `floww.xyz` (ou temporaire Vercel)
 - [ ] Vérifier le SSR des pages créateurs
