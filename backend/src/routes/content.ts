@@ -102,21 +102,38 @@ app.get("/posts/:id", async (c) => {
   return c.json(post);
 });
 
+// GET /api/my/posts — creator's own posts (auth required)
+app.get("/my/posts", authMiddleware, async (c) => {
+  const walletAddress = c.get("walletAddress");
+
+  const result = await db
+    .select()
+    .from(posts)
+    .where(eq(posts.creatorId, walletAddress))
+    .orderBy(desc(posts.publishedAt));
+
+  return c.json(result);
+});
+
 // POST /api/posts — auth required
 app.post("/posts", authMiddleware, async (c) => {
   const walletAddress = c.get("walletAddress");
 
   const body = await c.req.json<{
     title: string;
-    contentIpfsHash: string;
+    content?: string;
+    contentIpfsHash?: string;
     isExclusive?: boolean;
     requiredPlanId?: number;
     requiredPassId?: number;
   }>();
 
-  if (!body.title || !body.contentIpfsHash) {
-    return c.json({ error: "Title and content are required" }, 400);
+  if (!body.title) {
+    return c.json({ error: "Title is required" }, 400);
   }
+
+  // Use provided IPFS hash or store content as plain text hash placeholder
+  const contentHash = body.contentIpfsHash ?? body.content ?? "";
 
   const [post] = await db
     .insert(posts)
@@ -124,7 +141,7 @@ app.post("/posts", authMiddleware, async (c) => {
       id: randomUUIDv7(),
       creatorId: walletAddress,
       title: body.title,
-      contentIpfsHash: body.contentIpfsHash,
+      contentIpfsHash: contentHash,
       isExclusive: body.isExclusive ?? false,
       requiredPlanId: body.requiredPlanId ?? null,
       requiredPassId: body.requiredPassId ?? null,
@@ -132,6 +149,24 @@ app.post("/posts", authMiddleware, async (c) => {
     .returning();
 
   return c.json(post, 201);
+});
+
+// DELETE /api/posts/:id — auth required
+app.delete("/posts/:id", authMiddleware, async (c) => {
+  const walletAddress = c.get("walletAddress");
+  const postId = c.req.param("id");
+
+  const [post] = await db
+    .select()
+    .from(posts)
+    .where(eq(posts.id, postId))
+    .limit(1);
+
+  if (!post) return c.json({ error: "Post not found" }, 404);
+  if (post.creatorId !== walletAddress) return c.json({ error: "Not your post" }, 403);
+
+  await db.delete(posts).where(eq(posts.id, postId));
+  return c.json({ ok: true });
 });
 
 // POST /api/upload — auth required, upload file to IPFS

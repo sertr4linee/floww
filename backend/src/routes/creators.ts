@@ -82,4 +82,18 @@ app.post("/me", authMiddleware, async (c) => {
   return c.json(creator);
 });
 
+// GET /api/creators/me/profile — get own profile (auth required)
+app.get("/me/profile", authMiddleware, async (c) => {
+  const walletAddress = c.get("walletAddress");
+
+  const [creator] = await db
+    .select()
+    .from(creators)
+    .where(eq(creators.id, walletAddress))
+    .limit(1);
+
+  if (!creator) return c.json({ error: "Profile not found" }, 404);
+  return c.json(creator);
+});
+
 export default app;
