@@ -197,6 +197,9 @@ function watchTips() {
 
         await saveLastBlock("tip", log.blockNumber!);
         console.log(`[indexer] New tip: ${from} → ${creator} (${amount})`);
+
+        // Send email notification
+        notifyNewTip(creator!, from!, amount!.toString(), token ?? null, message ?? "").catch(() => {});
       }
     },
   });
