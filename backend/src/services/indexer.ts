@@ -3,6 +3,7 @@ import { publicClient } from "../lib/viem";
 import { TIP_ADDRESS, SUBSCRIPTION_ADDRESS, GATE_ADDRESS } from "../lib/contracts";
 import { db } from "../db";
 import { tips, subscriptions, passesMinted, indexerState } from "../db/schema";
+import { notifyNewTip, notifyNewSubscriber } from "./notifications";
 import { eq } from "drizzle-orm";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";

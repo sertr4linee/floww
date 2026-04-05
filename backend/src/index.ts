@@ -38,6 +38,9 @@ startIndexer().catch((err) => {
   console.error("[indexer] Failed to start:", err);
 });
 
+// Start renewal cron (every 1h)
+startRenewalCron();
+
 export default {
   port,
   fetch: app.fetch,
