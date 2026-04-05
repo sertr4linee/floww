@@ -300,38 +300,38 @@
 
 ### 4.1 Widget embed
 
-- [ ] Créer `public/embed.js` — script injectable
-  - [ ] Lit `data-creator` sur le div
-  - [ ] Injecte une iframe pointant vers `/embed/[creatorAddress]`
-- [ ] Créer `app/embed/[address]/page.tsx` — version minimale (bouton tip uniquement)
+- [x] Créer `public/embed.js` — script injectable
+  - [x] Lit `data-floww-creator` sur le div
+  - [x] Injecte une iframe pointant vers `/embed/[creatorAddress]`
+- [x] Créer `app/embed/[address]/page.tsx` — version minimale (bouton tip uniquement)
 - [ ] Tester l'embed sur une page HTML externe
 
 ### 4.2 Onboarding créateur
 
-- [ ] `app/onboarding/page.tsx` — flow en 3 étapes :
-  - [ ] Étape 1 : Connexion wallet (AGW)
-  - [ ] Étape 2 : Choisir un username + remplir profil (displayName, bio, avatar)
-  - [ ] Étape 3 : Créer son premier plan d'abonnement (optionnel)
-- [ ] Redirection vers le dashboard après onboarding
+- [x] `app/onboarding/page.tsx` — flow en 3 étapes :
+  - [x] Étape 1 : Connexion wallet (AGW)
+  - [x] Étape 2 : Choisir un username + remplir profil (displayName, bio, avatar)
+  - [x] Étape 3 : Redirection vers page créateur + dashboard
+- [x] Redirection vers le dashboard après onboarding
 
 ### 4.3 Notifications email
 
-- [ ] `bun add resend` (backend)
-- [ ] Créer `src/services/notifications.ts`
-  - [ ] Template : nouveau tip reçu
-  - [ ] Template : nouvel abonné
-  - [ ] Template : abonnement renouvelé
-- [ ] Ajouter un champ `email` optionnel dans la table `creators`
-- [ ] Envoyer les notifs à chaque event indexé (si email renseigné)
+- [x] `bun add resend` (backend)
+- [x] Créer `src/services/notifications.ts`
+  - [x] Template : nouveau tip reçu
+  - [x] Template : nouvel abonné
+  - [x] Template : abonnement renouvelé
+- [x] Champ `email` optionnel déjà dans la table `creators`
+- [x] Envoyer les notifs à chaque event indexé (si email renseigné)
 
 ### 4.4 Job de renouvellement
 
-- [ ] Créer `src/jobs/renewal.ts`
-  - [ ] Cron toutes les heures : cherche les abos avec `nextBillingDate < now` et `active = true`
-  - [ ] Appelle `FlowwSubscription.renew()` pour chaque abo dû
-  - [ ] Le caller paie le gas (le backend est le "keeper")
+- [x] Créer `src/jobs/renewal.ts`
+  - [x] Cron toutes les heures : cherche les abos avec `nextBillingDate < now` et `active = true`
+  - [x] Appelle `FlowwSubscription.renew()` pour chaque abo dû via keeper wallet
+  - [x] Simulate avant d'exécuter pour éviter les revert
 - [ ] Configurer le wallet keeper avec des fonds ETH testnet
-- [ ] Gérer les échecs (USDC insuffisant → marquer l'abo comme `failed`)
+- [x] Gérer les échecs (USDC insuffisant → marquer l'abo comme `failed`)
 
 ### 4.5 QA & fix
 
