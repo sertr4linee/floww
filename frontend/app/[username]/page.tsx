@@ -21,7 +21,7 @@ async function getCreator(username: string) {
 
 async function getPosts(username: string) {
   try {
-    const res = await fetch(`${API}/api/creators/${username}/posts`, {
+    const res = await fetch(`${API}/api/${username}/posts`, {
       next: { revalidate: 30 },
     });
     if (!res.ok) return [];

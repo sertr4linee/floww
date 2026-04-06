@@ -12,7 +12,10 @@ export function LandingNav() {
         FLOWW
       </Link>
       <div className="flex items-center gap-6">
-        {!loading && isConnected && hasProfile ? (
+        {loading ? (
+          // Show nothing while loading to avoid flash
+          <div className="w-24 h-8" />
+        ) : isConnected && hasProfile ? (
           <>
             <Link href={`/${profile!.username}`} className="text-sm text-[var(--text-dim)] hover:text-[var(--text)] transition-colors">
               My Page
