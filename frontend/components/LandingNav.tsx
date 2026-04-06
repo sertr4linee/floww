@@ -1,10 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { useCreatorProfile } from "@/hooks/useCreatorProfile";
 
 export function LandingNav() {
   const { isConnected, hasProfile, profile, loading } = useCreatorProfile();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  const showButtons = mounted && !loading;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 border-b border-[var(--border)] bg-[var(--black)]/90 backdrop-blur-sm">
@@ -12,8 +18,7 @@ export function LandingNav() {
         FLOWW
       </Link>
       <div className="flex items-center gap-6">
-        {loading ? (
-          // Show nothing while loading to avoid flash
+        {!showButtons ? (
           <div className="w-24 h-8" />
         ) : isConnected && hasProfile ? (
           <>
